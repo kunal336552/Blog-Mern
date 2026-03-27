@@ -14,7 +14,6 @@
     "@reduxjs/toolkit": "^2.11.2",
     "@tailwindcss/vite": "^4.2.1",
     "axios": "^1.13.6",
-    "backend": "file:..",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "jodit-react": "^5.3.21",
