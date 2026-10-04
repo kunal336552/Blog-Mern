@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/Components/ui/table"
 import axios from 'axios'
 import { Eye } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
