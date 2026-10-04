@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/Components/ui/table"
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { setBlog } from '@/Redux/blogSlice'
@@ -64,7 +64,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/Components/ui/dropdown-menu"
 import { Edit, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
