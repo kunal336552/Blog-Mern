@@ -12,6 +12,9 @@ dotenv.config()
 
 const app = express()
 
+const port = process.env.PORT || 3000
+const frontendPath = path.resolve(process.cwd(), "frontend", "dist")
+
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }))
@@ -23,7 +26,11 @@ const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:5173")
 
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (
+            !origin ||
+            allowedOrigins.includes(origin) ||
+            origin === `http://localhost:${port}`
+        ) {
             return callback(null, true)
         }
 
@@ -32,16 +39,13 @@ app.use(cors({
     credentials: true
 }))
 
-const port = process.env.PORT || 3000
-const frontendPath = path.resolve(process.cwd(), "frontend", "dist")
-
 app.use("/api/v1/user", userRoute)
 app.use("/api/v1/blog", blogRoute)
 app.use("/api/v1/comment", commentRoute)
 
 app.use(express.static(frontendPath))
 
-app.use((req, res) => {
+app.get(/.*/, (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"))
 })
 
