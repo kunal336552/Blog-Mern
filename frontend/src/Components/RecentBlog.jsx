@@ -2,7 +2,7 @@ import { setBlog } from "@/Redux/blogSlice";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import BlogCardList from "./BlogCardLIst";
+import BlogCardList from "./BlogCardList";
 import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
