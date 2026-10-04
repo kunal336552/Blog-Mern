@@ -16,9 +16,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-// import { Field, FieldGroup } from "@/components/ui/field"
-import { Input } from "@/components/ui/input";
+} from "@/Components/ui/dialog";
+// import { Field, FieldGroup } from "@/Components/ui/field"
+import { Input } from "@/Components/ui/input";
 import { Textarea } from "@/Components/ui/textarea";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser } from "@/Redux/authSlice";

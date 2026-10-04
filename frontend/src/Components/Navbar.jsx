@@ -25,7 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/Components/ui/dropdown-menu"
 import ResponsiveMenu from "./ResponsiveMenu";
 
 const Navbar = () => {

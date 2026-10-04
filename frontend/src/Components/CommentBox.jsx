@@ -15,7 +15,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/Components/ui/dropdown-menu"
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Edit, Trash2 } from "lucide-react";
 
