@@ -48,7 +48,7 @@ const RecentBlog = () => {
           <div className="my-5 flex flex-wrap gap-3">
             {[
               "Blogging",
-              "Web Devlopment",
+              "Web Developing",
               "Digital Marketing",
               "Cooking",
               "Photography",
