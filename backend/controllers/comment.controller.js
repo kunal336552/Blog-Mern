@@ -9,7 +9,8 @@ export const createComment = async (req, res) => {
     const { content } = req.body;
 
     const blog = await Blog.findById(postId);
-    if (!content)
+    if (!blog) return res.status(404).json({message:"Blog not found", success:false});
+    if (!content?.trim())
       return res
         .status(400)
         .json({ message: "Text is required", success: false });
@@ -33,6 +34,7 @@ export const createComment = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({success:false, message:"Failed to create comment"});
   }
 };
 
@@ -53,6 +55,7 @@ export const getCommentsOfPost = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({success:false, message:"Failed to fetch comments"});
   }
 };
 
@@ -109,6 +112,9 @@ export const editComment = async (req, res) => {
     if (!comment) {
       return res.status(404).json({ message: "Comment not found" });
     }
+    if (!content?.trim()) {
+      return res.status(400).json({success:false, message:"Comment text is required"});
+    }
     //check if the user owns the comment
     if (comment.userId.toString() !== userId) {
       return res
@@ -154,16 +160,15 @@ export const likeComment = async (req, res) => {
         .json({ success: false, message: "Comment not found" });
     }
 
-    const alreadyLiked = comment.likes.includes(userId);
+    const alreadyLiked = comment.likes.some((id) => id.toString() === userId);
     if (alreadyLiked) {
       //If already like or unlike it
-      comment.likes = comment.likes.filter((id) => id !== userId);
-      comment.numberOfLikes = Math.max(0, comment.numberOfLikes - 1);
+      comment.likes = comment.likes.filter((id) => id.toString() !== userId);
     } else {
       //If not liked yet ,liked it
       comment.likes.push(userId);
-      comment.numberOfLikes += 1;
     }
+    comment.numberOfLikes = comment.likes.length;
 
     await comment.save();
     res.status(200).json({

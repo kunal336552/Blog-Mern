@@ -42,12 +42,22 @@ export const updateBlog = async (req,res) => {
                 message:"Blog not found"
             })
         }
+        if(blog.author.toString() !== req.id){
+            return res.status(403).json({
+                success:false,
+                message:"Unauthorized to update this blog"
+            })
+        }
         let thumbnail;
         if(file){
             const fileUri = getDataUri(file)
             thumbnail = await cloudinary.uploader.upload(fileUri)
         }
-        const updateData = {title,subtitle,description,category,author:req.id,thumbnail:thumbnail?.secure_url}
+        const updateData = {};
+        for (const [key, value] of Object.entries({title, subtitle, description, category})) {
+            if (value !== undefined) updateData[key] = value;
+        }
+        if (thumbnail) updateData.thumbnail = thumbnail.secure_url;
         blog = await Blog.findByIdAndUpdate(blogId,updateData,{new:true})
         res.status(200).json({
             success:true,
@@ -157,6 +167,12 @@ export const togglePublishBlog = async (req,res) => {
                 message:"Blog not found"
             })
         }
+        if(blog.author.toString() !== req.id){
+            return res.status(403).json({
+                success:false,
+                message:"Unauthorized to change this blog's publish status"
+            })
+        }
         //Publish status based on the query parameter
         blog.isPublished = !blog.isPublished
         await blog.save();
@@ -189,7 +205,8 @@ export const likeBlog = async (req,res) => {
         await blog.save()
         return res.status(200).json({message:"Blog liked",success:true,blog})
     } catch (error) {
-        console.log(error)
+        console.error(error)
+        return res.status(500).json({success:false, message:"Failed to like blog"})
     }
 }
 
@@ -209,7 +226,8 @@ export const dislikeBlog = async (req,res) => {
         await blog.save()
         return res.status(200).json({message:"Blog disliked",success:true,blog})
     } catch (error) {
-        console.log(error)
+        console.error(error)
+        return res.status(500).json({success:false, message:"Failed to unlike blog"})
     }
 }
 

@@ -65,7 +65,7 @@ const UpdateBlog = () => {
     formData.append("file",blogData.thumbnail);
     try {
       dispatch(setLoading(true))
-      const res = await axios.put(`http://localhost:8000/api/v1/blog/${id}`,formData,{
+      const res = await axios.put(`/api/v1/blog/${id}`,formData,{
         headers:{
           "Content-Type":"multipart/form-data"
           },
@@ -84,12 +84,7 @@ const UpdateBlog = () => {
 
    const togglePublishOrUnpublish =async () => {
     try {
-      const res = await axios.patch(`http://localhost:8000/api/v1/blog/${id}`,{
-        // params:{
-        //   action
-        // },
-        withCredentials:true,
-      })
+      const res = await axios.patch(`/api/v1/blog/${id}`,{}, {withCredentials:true})
       if(res.data.success){
         setPublish(!publish)
         toast.success(res.data.message)
@@ -104,7 +99,7 @@ const UpdateBlog = () => {
   
   const deleteBlog = async () => {
     try {
-      const res = await axios.delete(`http://localhost:8000/api/v1/blog/delete/${id}`,{withCredentials:true})
+      const res = await axios.delete(`/api/v1/blog/delete/${id}`,{withCredentials:true})
       if(res.data.success){
         const updatedDataBlog = blog.filter((blogItem)=>blogItem?._id!==id)
         dispatch(setBlog(updatedDataBlog))

@@ -78,7 +78,7 @@ export const login = async (req, res) => {
       });
     }
     const token = await jwt.sign({userId:user._id},process.env.SECRET_KEY,{expiresIn:"1d"})
-    return res.status(200).cookie("token",token,{maxAge:1*24*60*60*1000, httpsOnly:true,sameSite:"strict"}).json({
+    return res.status(200).cookie("token",token,{maxAge:1*24*60*60*1000, httpOnly:true,sameSite:process.env.NODE_ENV === "production" ? "none" : "strict", secure:process.env.NODE_ENV === "production"}).json({
         success:true,
         message:`Welcome back ${user.firstName}`,
         user
@@ -94,7 +94,11 @@ export const login = async (req, res) => {
 
 export const logout = (_,res) =>{
     try {
-        return res.status(200).cookie("token", "",{maxAge: 0}).json({
+        return res.status(200).clearCookie("token", {
+          httpOnly: true,
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+          secure: process.env.NODE_ENV === "production",
+        }).json({
             success:true,
             message:"Logout succeccfully"
         })
@@ -115,8 +119,11 @@ export const updateProfile = async (req,res) => {
     //   const fileUri = getDataUri(file)
     //   cloudResponse = await cloudinary.uploader.upload(fileUri)
     // }
-    const fileUri = getDataUri(file);
-    let cloudResponse = await cloudinary.uploader.upload(fileUri)
+    let cloudResponse;
+    if (file) {
+      const fileUri = getDataUri(file);
+      cloudResponse = await cloudinary.uploader.upload(fileUri)
+    }
 
     const user = await User.findById(userId).select("-password")
     if(!user){
@@ -131,11 +138,11 @@ export const updateProfile = async (req,res) => {
     if(lastName) user.lastName = lastName
     if(occupation) user.occupation = occupation
     if(bio) user.bio = bio
-    if(instagram) user.instagram = instagram
-    if(facebook) user.faceBook = facebook
-    if(linkedin) user.linkedIn = linkedin
-    if(github) user.gitHub = github
-    if(file) user.photoUrl = cloudResponse.secure_url
+    if(instagram !== undefined) user.instagram = instagram
+    if(facebook !== undefined) user.faceBook = facebook
+    if(linkedin !== undefined) user.linkedIn = linkedin
+    if(github !== undefined) user.gitHub = github
+    if(file && cloudResponse) user.photoUrl = cloudResponse.secure_url
 
     await user.save()
     return res.status(200).json({

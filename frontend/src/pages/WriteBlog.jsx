@@ -11,7 +11,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/Components/ui/select";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -36,7 +36,7 @@ const WriteBlog = () => {
   const createBlogHandler = async () => {
     try {
       dispatch(setLoading(true))
-      const res = await axios.post(`http://localhost:8000/api/v1/blog/`,{title,category},{
+      const res = await axios.post(`/api/v1/blog/`,{title,category},{
         headers:{
           "Content-Type":"application/json"
         },

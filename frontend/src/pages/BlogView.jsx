@@ -25,10 +25,10 @@ const BlogView = () => {
   const params = useParams();
   const blogId = params.blogId;
   const {blog} = useSelector(store=>store.blog)
-  const selectedBlog = blog.find(blog=>blog._id === blogId)
-  const [blogLike,setBlogLike] = useState(selectedBlog.likes.length)
+  const selectedBlog = Array.isArray(blog) ? blog.find(blog=>blog._id === blogId) : undefined
+  const [blogLike,setBlogLike] = useState(selectedBlog?.likes?.length ?? 0)
   const {user} = useSelector(store=>store.auth)
-  const [liked,setLiked] = useState(selectedBlog.likes.includes(user._id)||false)
+  const [liked,setLiked] = useState(Boolean(user && selectedBlog?.likes?.some(id => String(id?._id ?? id) === user._id)))
   const dispatch = useDispatch();
   
 
@@ -60,7 +60,7 @@ const BlogView = () => {
   const likeOrDislikeHandler = async () => {
     try {
       const action = liked ? 'dislike' : 'like'
-      const res = await axios.get(`http://localhost:8000/api/v1/blog/${selectedBlog._id}/${action}`,{withCredentials:true})
+      const res = await axios.get(`/api/v1/blog/${selectedBlog._id}/${action}`,{withCredentials:true})
       if(res.data.success){
         const updatedLikes = liked ? blogLike -1 : blogLike +1
         setBlogLike(updatedLikes)
@@ -82,6 +82,9 @@ const BlogView = () => {
   useEffect(()=>{
     window.scrollTo(0,0)
   },[])
+  if (!selectedBlog) {
+    return <div className="pt-24 text-center">Blog not found. Go back to the blog list and select a post.</div>
+  }
   return (
     <div className='pt-14'>
       <div className='max-w-6xl mx-auto p-10'>
@@ -126,7 +129,7 @@ const BlogView = () => {
       <img src={selectedBlog.thumbnail} alt="thumbnail"  width={1000} height={500} className='w-full object-cover'/>
       <p className='text-sm text-muted-foreground mt-2 italic'>{selectedBlog.subtitle}</p>
     </div>
-    <p dangerouslySetInnerHTML={{__html:selectedBlog.description}}/>
+    <p className="whitespace-pre-wrap">{new DOMParser().parseFromString(selectedBlog.description || "", "text/html").body.textContent}</p>
     <div className='mt-10'>
       <div className='flex flex-wrap mb-8 gap-2'>
         <Badge variant='secondary' className="dark:bg-gray-800">Next.js</Badge>

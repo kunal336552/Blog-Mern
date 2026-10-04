@@ -12,6 +12,6 @@ router.route("/:id/like").get(isAuthenticated,likeBlog)
 router.route("/:id/dislike").get(isAuthenticated,dislikeBlog)
 router.route("/my-blogs/likes").get(isAuthenticated,getMyTotalBlogLikes)
 router.route("/get-published-blogs").get(getPblishedBlog)
-router.route("/:blogId").patch(togglePublishBlog)
+router.route("/:blogId").patch(isAuthenticated,togglePublishBlog)
 
 export default router;
